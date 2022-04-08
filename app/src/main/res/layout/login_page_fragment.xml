@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.graphics.Color" />
+        <variable
+            name="viewModel"
+            type="com.example.myspreadshirtapp.LoginPageViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".LoginPage">
+
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="emailAddress"
+                android:backgroundTint="@{viewModel.email.isValid ? Color.GRAY : Color.RED}"
+                android:ems="13"
+                android:hint="@string/emailLabel"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp"
+                android:text="@={viewModel.email.value}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewEmailValidationMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.email.validationMessage}"
+                android:textSize="12sp"
+                android:height="16sp"
+                android:visibility="@{viewModel.email.isValid ? View.GONE : View.VISIBLE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="password"
+                android:backgroundTint="@{viewModel.password.isValid ? Color.GRAY : Color.RED}"
+                android:ems="13"
+                android:hint="@string/passwordLabel"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:text="@={viewModel.password.value}"
+                android:textColorHint="#757575"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewEmailValidationMessage" />
+
+            <TextView
+                android:id="@+id/textViewPasswordValidationMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.password.validationMessage}"
+                android:textSize="12sp"
+                android:height="16sp"
+                android:visibility="@{viewModel.password.isValid ? View.GONE : View.VISIBLE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutRemember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewPasswordValidationMessage">
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/rememberMeSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="@={viewModel.rememberMe}"
+                    android:minHeight="48dp"
+                    android:text="@string/remember_meLabel" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/logInAutomaticallySwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="@={viewModel.logInAutomatically}"
+                    android:minHeight="48dp"
+                    android:text="@string/log_in_automaticallyLabel"
+                    android:visibility="@{!viewModel.rememberMe ? View.GONE : View.VISIBLE}" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:enabled="@{viewModel.email.isValid &amp; viewModel.password.isValid}"
+                android:text="@string/loginLabel"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.508"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutRemember" />
+
+
+            <LinearLayout
+                android:id="@+id/linearLayoutRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loginButton">
+
+                <TextView
+
+                    android:id="@+id/textViewDontHaveAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/don_t_have_an_account_yetLabel"
+                    android:textAlignment="center"
+                    android:textSize="16sp"/>
+
+                <Button
+                    android:id="@+id/buttonTapHereToRegister"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tap_here_to_registerLabel" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

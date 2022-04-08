@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="android.graphics.Color" />
+        <variable
+            name="viewModel"
+            type="com.example.myspreadshirtapp.RegisterPageViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".LoginPage">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="emailAddress"
+                android:backgroundTint="@{viewModel.email.isValid ? Color.GRAY : Color.RED}"
+                android:ems="13"
+                android:hint="@string/emailLabel"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp"
+                android:text="@={viewModel.email.value}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewEmailValidationMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.email.validationMessage}"
+                android:textSize="12sp"
+                android:height="16sp"
+                android:visibility="@{viewModel.email.isValid ? View.GONE : View.VISIBLE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autofillHints="password"
+                android:backgroundTint="@{viewModel.password.isValid ? Color.GRAY : Color.RED}"
+                android:ems="13"
+                android:hint="@string/passwordLabel"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:text="@={viewModel.password.value}"
+                android:textColorHint="#757575"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewEmailValidationMessage" />
+
+            <TextView
+                android:id="@+id/textViewPasswordValidationMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.password.validationMessage}"
+                android:textSize="12sp"
+                android:height="16sp"
+                android:visibility="@{viewModel.password.isValid ? View.GONE : View.VISIBLE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editTextConfirmPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:autofillHints="password"
+                android:backgroundTint="@{viewModel.confirmPassword.isValid ? Color.GRAY : Color.RED}"
+                android:ems="13"
+                android:hint="@string/confirm_passwordLabel"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:text="@={viewModel.confirmPassword.value}"
+                android:textColorHint="#757575"
+                app:layout_constraintStart_toStartOf="@+id/editTextEmail"
+                app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
+
+            <TextView
+                android:id="@+id/textViewConfirmPasswordValidationMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.confirmPassword.validationMessage}"
+                android:textSize="12sp"
+                android:height="16sp"
+                android:visibility="@{viewModel.confirmPassword.isValid ? View.GONE : View.VISIBLE }"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextConfirmPassword" />
+
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:enabled="@{viewModel.email.isValid &amp; viewModel.confirmPassword.isValid}"
+                android:text="@string/registerLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewConfirmPasswordValidationMessage" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

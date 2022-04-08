@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/loginPage">
+
+    <fragment
+        android:id="@+id/loginPage"
+        android:name="com.example.myspreadshirtapp.LoginPage"
+        android:label="login_page_fragment"
+        tools:layout="@layout/login_page_fragment" >
+        <action
+            android:id="@+id/action_loginPage_to_registerFragment"
+            app:destination="@id/registerPage"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:launchSingleTop="true" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerPage"
+        android:name="com.example.myspreadshirtapp.RegisterPage"
+        android:label="fragment_register"
+        tools:layout="@layout/register_page_fragment" >
+        <action
+            android:id="@+id/action_registerFragment_to_loginPage"
+            app:destination="@id/loginPage"
+            app:popUpTo="@id/loginPage"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
+    </fragment>
+</navigation>

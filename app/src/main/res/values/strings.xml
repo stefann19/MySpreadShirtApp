@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MySpreadShirtApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="emailLabel">Email</string>
+    <string name="passwordLabel">Password</string>
+    <string name="loginLabel">Login</string>
+    <string name="don_t_have_an_account_yetLabel">Don\'t have an account yet?</string>
+    <string name="tap_here_to_registerLabel">Tap here to register.</string>
+    <string name="remember_meLabel">Remember me</string>
+    <string name="log_in_automaticallyLabel">Log in automatically</string>
+    <string name="registerLabel">Register</string>
+    <string name="confirm_passwordLabel">Confirm password</string>
+</resources>
