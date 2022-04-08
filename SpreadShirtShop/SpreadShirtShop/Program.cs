@@ -1,4 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using SpreadShirtShop.Data;
 var builder = WebApplication.CreateBuilder(args);
+
+
+var conectionString = builder.Configuration.GetConnectionString("SpreadShirtShopContext");
+
+builder.Services.AddDbContext<SpreadShirtShopContext>(options =>
+    options.UseMySql(conectionString, ServerVersion.AutoDetect(conectionString)));
 
 // Add services to the container.
 
