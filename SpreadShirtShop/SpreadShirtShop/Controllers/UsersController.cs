@@ -1,8 +1,6 @@
 ﻿#nullable disable
 using System.Net;
 using System.Net.Mail;
-using System.Security.Cryptography;
-using DevOne.Security.Cryptography.BCrypt;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SpreadShirtShop.Data;
@@ -55,7 +53,7 @@ namespace SpreadShirtShop.Controllers
                         return "Incorrect email or password";
                     }
 
-                    if (BCryptHelper.CheckPassword(password, user.Password))
+                    if (BCrypt.Net.BCrypt.Verify(password, user.Password))
                     {
                         switch (user.AccountStatus)
                         {
@@ -152,7 +150,7 @@ namespace SpreadShirtShop.Controllers
 
             smtpClient.Send("spreadshirtshopapp@gmail.com", user.Email, "Spreadshirt shop email confirmation", $"Please enter code: {verificationcode}, for verification");
 
-            user.Password = BCryptHelper.HashPassword(user.Password, Salt);
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, Salt);
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
