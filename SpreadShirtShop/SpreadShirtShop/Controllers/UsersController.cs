@@ -45,48 +45,57 @@ namespace SpreadShirtShop.Controllers
         [HttpGet("/LoginUser/")]
         public async Task<ActionResult<String>> LoginUser(string email,string password)
         {
-            var user = _context.User.FirstOrDefault(u=> u.Email.Equals(email));
+            return await _context.User
+                .FirstOrDefaultAsync(u => u.Email.Equals(email))
+                .ContinueWith(u =>
+                {
+                    var user = u.Result;
+                    if (user == null)
+                    {
+                        return "Incorrect email or password";
+                    }
 
-            if (user == null)
-            {
-                return "Incorrect email or password";
-            }
-
-            if (BCryptHelper.CheckPassword(password, user.Password))
-            {
-                switch (user.AccountStatus)
-                { 
-                    case "Ok" : return "Success";
-                    case "Waiting for verification.": return "Account not verified.";
-                    default:
-                        return "Something is wrong";
-                }
-            }
-            else
-            {
-                return "Incorrect email or password";
-            }
+                    if (BCryptHelper.CheckPassword(password, user.Password))
+                    {
+                        switch (user.AccountStatus)
+                        {
+                            case "Ok": return "Success";
+                            case "Waiting for verification.": return "Account not verified.";
+                            default:
+                                return "Something is wrong";
+                        }
+                    }
+                    else
+                    {
+                        return "Incorrect email or password";
+                    }
+                });
         }
         [HttpGet("/VerifyUser/")]
         public async Task<ActionResult<String>> VerifyUser(string email, string code)
         {
-            var user = _context.User.FirstOrDefault(u => u.Email.Equals(email));
+            return await _context.User.FirstOrDefaultAsync(u => u.Email.Equals(email))
+                .ContinueWith(u =>
+                {
+                    var user = u.Result;
 
-            if (user == null)
-            {
-                return "Email not found";
-            }
+                    if (user == null)
+                    {
+                        return "Email not found";
+                    }
 
-            if (user.VerificationCode.Equals(code))
-            {
-                user.AccountStatus = "Ok";
-                _context.SaveChanges();
-                return "Success";
-            }
-            else
-            {
-                return "Wrong code";
-            }
+                    if (user.VerificationCode?.Equals(code) ?? false)
+                    {
+                        user.AccountStatus = "Ok";
+                        _context.SaveChangesAsync();
+                        return "Success";
+                    }
+                    else
+                    {
+                        return "Wrong code";
+                    }
+                });
+            
         }
 
         // PUT: api/Users/5
