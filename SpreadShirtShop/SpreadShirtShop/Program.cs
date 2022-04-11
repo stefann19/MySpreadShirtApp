@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 var conectionString = builder.Configuration.GetConnectionString("SpreadShirtShopContext");
 
 builder.Services.AddDbContext<SpreadShirtShopContext>(options =>
-    options.UseMySql(conectionString, ServerVersion.AutoDetect(conectionString)));
+    options.UseSqlServer(conectionString));
 
 // Add services to the container.
 

@@ -1,4 +1,8 @@
 ﻿#nullable disable
+using System.Net;
+using System.Net.Mail;
+using System.Security.Cryptography;
+using DevOne.Security.Cryptography.BCrypt;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SpreadShirtShop.Data;
@@ -11,7 +15,7 @@ namespace SpreadShirtShop.Controllers
     public class UsersController : ControllerBase
     {
         private readonly SpreadShirtShopContext _context;
-
+        private static string Salt = "$2a$12$VvDRKYKGt4Zd2Ux35LeG2OI.Vr5f.UuY2q7MrnHlJj4K5diifQV3z";
         public UsersController(SpreadShirtShopContext context)
         {
             _context = context;
@@ -36,6 +40,53 @@ namespace SpreadShirtShop.Controllers
             }
 
             return user;
+        }
+        // GET: api/Users/5
+        [HttpGet("/LoginUser/")]
+        public async Task<ActionResult<String>> LoginUser(string email,string password)
+        {
+            var user = _context.User.FirstOrDefault(u=> u.Email.Equals(email));
+
+            if (user == null)
+            {
+                return "Incorrect email or password";
+            }
+
+            if (BCryptHelper.CheckPassword(password, user.Password))
+            {
+                switch (user.AccountStatus)
+                { 
+                    case "Ok" : return "Success";
+                    case "Waiting for verification.": return "Account not verified.";
+                    default:
+                        return "Something is wrong";
+                }
+            }
+            else
+            {
+                return "Incorrect email or password";
+            }
+        }
+        [HttpGet("/VerifyUser/")]
+        public async Task<ActionResult<String>> VerifyUser(string email, string code)
+        {
+            var user = _context.User.FirstOrDefault(u => u.Email.Equals(email));
+
+            if (user == null)
+            {
+                return "Email not found";
+            }
+
+            if (user.VerificationCode.Equals(code))
+            {
+                user.AccountStatus = "Ok";
+                _context.SaveChanges();
+                return "Success";
+            }
+            else
+            {
+                return "Wrong code";
+            }
         }
 
         // PUT: api/Users/5
@@ -74,8 +125,29 @@ namespace SpreadShirtShop.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            if (_context.User.Any(u => u.Email.Equals(user.Email)))
+            {
+                return BadRequest("Email already registered");
+            }
+
+            var verificationcode = Random.Shared.Next(100000, 999999);
+            user.VerificationCode = verificationcode.ToString();
+            user.AccountStatus = "Waiting for verification.";
+
+            var smtpClient = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("spreadshirtshopapp@gmail.com", "nrbzwoakugzmbkdk"),
+                EnableSsl = true,
+            };
+
+            smtpClient.Send("spreadshirtshopapp@gmail.com", user.Email, "Spreadshirt shop email confirmation", $"Please enter code: {verificationcode}, for verification");
+
+            user.Password = BCryptHelper.HashPassword(user.Password, Salt);
             _context.User.Add(user);
             await _context.SaveChangesAsync();
+
+
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
