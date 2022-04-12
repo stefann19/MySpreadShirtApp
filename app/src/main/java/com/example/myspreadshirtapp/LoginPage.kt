@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.myspreadshirtapp.databinding.LoginPageFragmentBinding
 import com.example.myspreadshirtapp.repository.SpreadShirtApiRepo
-import com.example.myspreadshirtapp.repository.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,6 +51,8 @@ class LoginPage : Fragment() {
 
                     override fun onFailure(call: Call<String?> , t: Throwable) {
                         // Log error here since request failed
+                        val toast = Toast.makeText(v.context, t.message, Toast.LENGTH_LONG)
+                        toast.show()
                     }
                 })
             }

@@ -50,7 +50,7 @@ namespace SpreadShirtShop.Controllers
                     var user = u.Result;
                     if (user == null)
                     {
-                        return "Incorrect email or password";
+                        return "Incorrect_email_or_password";
                     }
 
                     if (BCrypt.Net.BCrypt.Verify(password, user.Password))
@@ -58,14 +58,14 @@ namespace SpreadShirtShop.Controllers
                         switch (user.AccountStatus)
                         {
                             case "Ok": return "Success";
-                            case "Waiting for verification.": return "Account not verified.";
+                            case "Waiting for verification.": return "Account_not_verified.";
                             default:
-                                return "Something is wrong";
+                                return "Something_is_wrong";
                         }
                     }
                     else
                     {
-                        return "Incorrect email or password";
+                        return "Incorrect_email_or_password";
                     }
                 });
         }
@@ -148,7 +148,12 @@ namespace SpreadShirtShop.Controllers
                 EnableSsl = true,
             };
 
-            smtpClient.Send("spreadshirtshopapp@gmail.com", user.Email, "Spreadshirt shop email confirmation", $"Please enter code: {verificationcode}, for verification");
+            smtpClient
+                .Send("spreadshirtshopapp@gmail.com",
+                    user.Email,
+                    "Spreadshirt shop email confirmation",
+                    $"Please click here for verification https://spreadshirtappserver.azurewebsites.net/api/Users/VerifyUser?email=${user.Email}&code={user.VerificationCode} "
+                    );
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, Salt);
             _context.User.Add(user);

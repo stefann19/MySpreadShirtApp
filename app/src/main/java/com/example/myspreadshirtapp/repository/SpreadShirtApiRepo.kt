@@ -7,10 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SpreadShirtApiRepo {
     companion object{
-        val BASE_URL = "http://spreadshirtappserver.azurewebsites.net/api/"
+        val BASE_URL = "https://spreadshirtappserver.azurewebsites.net/api/"
     }
 
-    var gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
+    var gson = GsonBuilder().setLenient().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create()
 
     var retrofit =
         Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create(gson))

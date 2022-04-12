@@ -6,11 +6,13 @@ import retrofit2.http.*
 class User(var id:Int,var email:String,var password:String,var accountStatus:String,var verificationCode:String)
 
 interface MyApiEndpointInterface {
-
+    @Headers("Content-Type: application/json")
     @GET("users/LoginUser")
-    fun loginUser(@Path("email")email:String,@Path("password")password: String) : Call<String>
+    fun loginUser(@Query("email")email:String , @Query("password")password: String) : Call<String>
+    @Headers("Content-Type: application/json")
     @GET("users/VerifyUser")
-    fun verifyUserCode(@Path("email")email:String,@Path("code")code: String) : Call<String>
+    fun verifyUserCode(@Query("email")email:String,@Query("code")code: String) : Call<String>
+    @Headers("Content-Type: application/json")
     @POST("users")
     fun registerUser(@Body user:User?): Call<User?>
 
