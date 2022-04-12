@@ -40,7 +40,7 @@ namespace SpreadShirtShop.Controllers
             return user;
         }
         // GET: api/Users/5
-        [HttpGet("/LoginUser/")]
+        [HttpGet("LoginUser/")]
         public async Task<ActionResult<String>> LoginUser(string email,string password)
         {
             return await _context.User
@@ -69,7 +69,7 @@ namespace SpreadShirtShop.Controllers
                     }
                 });
         }
-        [HttpGet("/VerifyUser/")]
+        [HttpGet("VerifyUser/")]
         public async Task<ActionResult<String>> VerifyUser(string email, string code)
         {
             return await _context.User.FirstOrDefaultAsync(u => u.Email.Equals(email))
