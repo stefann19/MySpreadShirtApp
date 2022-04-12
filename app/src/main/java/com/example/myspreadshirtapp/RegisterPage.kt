@@ -5,9 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.example.myspreadshirtapp.databinding.RegisterPageFragmentBinding
+import com.example.myspreadshirtapp.repository.SpreadShirtApiRepo
+import com.example.myspreadshirtapp.repository.User
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class RegisterPage : Fragment() {
 
@@ -27,6 +33,30 @@ class RegisterPage : Fragment() {
 
         args.email.let {viewModel.email.value.set(it)}
         args.password.let { viewModel.password.value.set(it) }
+        var spreadShirtApiRepo = SpreadShirtApiRepo()
+
+        binding.registerButton.setOnClickListener { v->
+            val email :String= viewModel.email.value.get() ?: ""
+            val password :String= viewModel.password.value.get() ?: ""
+            if(email.isNotEmpty() && password.isNotEmpty()){
+                val call: Call<User?> = spreadShirtApiRepo.api.registerUser(User(email,password))
+                call.enqueue(object : Callback<User?> {
+                    override fun onResponse(call: Call<User?> , response: Response<User?>) {
+                        val statusCode = response.code()
+                        val resp = response.body()
+
+                        val toast = Toast.makeText(v.context, resp.toString(), Toast.LENGTH_LONG)
+                        toast.show()
+                    }
+
+                    override fun onFailure(call: Call<User?> , t: Throwable) {
+                        // Log error here since request failed
+                        val toast = Toast.makeText(v.context, t.message, Toast.LENGTH_LONG)
+                        toast.show()
+                    }
+                })
+            }
+        }
 
         return binding.root
     }

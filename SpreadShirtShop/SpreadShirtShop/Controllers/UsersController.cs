@@ -152,7 +152,7 @@ namespace SpreadShirtShop.Controllers
                 .Send("spreadshirtshopapp@gmail.com",
                     user.Email,
                     "Spreadshirt shop email confirmation",
-                    $"Please click here for verification https://spreadshirtappserver.azurewebsites.net/api/Users/VerifyUser?email=${user.Email}&code={user.VerificationCode} "
+                    $"Please click here for verification https://spreadshirtappserver.azurewebsites.net/api/Users/VerifyUser?email={user.Email}&code={user.VerificationCode}"
                     );
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, Salt);
