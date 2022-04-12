@@ -161,7 +161,7 @@ namespace SpreadShirtShop.Controllers
 
 
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return "Success";
         }
 
         // DELETE: api/Users/5

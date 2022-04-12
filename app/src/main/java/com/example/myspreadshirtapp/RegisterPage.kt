@@ -39,17 +39,17 @@ class RegisterPage : Fragment() {
             val email :String= viewModel.email.value.get() ?: ""
             val password :String= viewModel.password.value.get() ?: ""
             if(email.isNotEmpty() && password.isNotEmpty()){
-                val call: Call<User?> = spreadShirtApiRepo.api.registerUser(User(email,password))
-                call.enqueue(object : Callback<User?> {
-                    override fun onResponse(call: Call<User?> , response: Response<User?>) {
+                val call: Call<String?> = spreadShirtApiRepo.api.registerUser(User(email,password))
+                call.enqueue(object : Callback<String?> {
+                    override fun onResponse(call: Call<String?> , response: Response<String?>) {
                         val statusCode = response.code()
                         val resp = response.body()
 
-                        val toast = Toast.makeText(v.context, resp.toString(), Toast.LENGTH_LONG)
+                        val toast = Toast.makeText(v.context, resp, Toast.LENGTH_LONG)
                         toast.show()
                     }
 
-                    override fun onFailure(call: Call<User?> , t: Throwable) {
+                    override fun onFailure(call: Call<String?> , t: Throwable) {
                         // Log error here since request failed
                         val toast = Toast.makeText(v.context, t.message, Toast.LENGTH_LONG)
                         toast.show()
