@@ -130,11 +130,11 @@ namespace SpreadShirtShop.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<string>> PostUser(User user)
         {
             if (_context.User.Any(u => u.Email.Equals(user.Email)))
             {
-                return BadRequest("Email already registered");
+                return "Email already registered";
             }
 
             var verificationcode = Random.Shared.Next(100000, 999999);
