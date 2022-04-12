@@ -134,7 +134,7 @@ namespace SpreadShirtShop.Controllers
         {
             if (_context.User.Any(u => u.Email.Equals(user.Email)))
             {
-                return "Email already registered";
+                return "Email_already_registered";
             }
 
             var verificationcode = Random.Shared.Next(100000, 999999);

@@ -16,7 +16,7 @@ interface MyApiEndpointInterface {
     @Headers("Content-Type: application/json")
     @GET("users/VerifyUser")
     fun verifyUserCode(@Query("email")email:String,@Query("code")code: String) : Call<String>
-    @Headers("Content-Type: application/json","accept: text/plain")
+    @Headers("Content-Type: application/json")
     @POST("users")
     fun registerUser(@Body user:User?): Call<String?>
 
