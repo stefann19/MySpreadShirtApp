@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpreadShirtShop.Data;
 
@@ -10,9 +11,10 @@ using SpreadShirtShop.Data;
 namespace SpreadShirtShop.Migrations
 {
     [DbContext(typeof(SpreadShirtShopContext))]
-    partial class SpreadShirtShopContextModelSnapshot : ModelSnapshot
+    [Migration("20220414132642_AddedDbGeneratedIdForCurrency")]
+    partial class AddedDbGeneratedIdForCurrency
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,9 +72,6 @@ namespace SpreadShirtShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SpreadShirtOldId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Symbol")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -93,12 +92,12 @@ namespace SpreadShirtShop.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
-                    b.Property<int>("CurrencyId")
+                    b.Property<int>("CurrencyId1")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurrencyId");
+                    b.HasIndex("CurrencyId1");
 
                     b.ToTable("CurrencyPrices");
                 });
@@ -219,7 +218,7 @@ namespace SpreadShirtShop.Migrations
                 {
                     b.HasOne("SpreadShirtShop.Models.Currency", "Currency")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
+                        .HasForeignKey("CurrencyId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

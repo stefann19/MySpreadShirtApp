@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpreadShirtShop.Data;
 
@@ -10,9 +11,10 @@ using SpreadShirtShop.Data;
 namespace SpreadShirtShop.Migrations
 {
     [DbContext(typeof(SpreadShirtShopContext))]
-    partial class SpreadShirtShopContextModelSnapshot : ModelSnapshot
+    [Migration("20220413151333_AddedHrefToCurrency")]
+    partial class AddedHrefToCurrency
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,9 +71,6 @@ namespace SpreadShirtShop.Migrations
                     b.Property<string>("Plain")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SpreadShirtOldId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Symbol")
                         .IsRequired()

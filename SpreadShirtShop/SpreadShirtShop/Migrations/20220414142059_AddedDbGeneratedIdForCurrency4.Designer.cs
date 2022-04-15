@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpreadShirtShop.Data;
 
@@ -10,9 +11,10 @@ using SpreadShirtShop.Data;
 namespace SpreadShirtShop.Migrations
 {
     [DbContext(typeof(SpreadShirtShopContext))]
-    partial class SpreadShirtShopContextModelSnapshot : ModelSnapshot
+    [Migration("20220414142059_AddedDbGeneratedIdForCurrency4")]
+    partial class AddedDbGeneratedIdForCurrency4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
