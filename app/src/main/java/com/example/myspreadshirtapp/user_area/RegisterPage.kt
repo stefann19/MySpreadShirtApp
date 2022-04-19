@@ -1,4 +1,4 @@
-package com.example.myspreadshirtapp
+package com.example.myspreadshirtapp.UserArea
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.example.myspreadshirtapp.databinding.RegisterPageFragmentBinding
 import com.example.myspreadshirtapp.repository.SpreadShirtApiRepo
 import com.example.myspreadshirtapp.repository.User
 import retrofit2.Call

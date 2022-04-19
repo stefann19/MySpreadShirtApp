@@ -1,4 +1,4 @@
-package com.example.myspreadshirtapp
+package com.example.myspreadshirtapp.UserArea
 
 import android.text.TextUtils
 import android.util.Patterns

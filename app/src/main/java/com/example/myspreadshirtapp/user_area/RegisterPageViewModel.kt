@@ -1,7 +1,5 @@
-package com.example.myspreadshirtapp
+package com.example.myspreadshirtapp.UserArea
 
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.example.myspreadshirtapp.utils.ValidatedEditTextViewModel
 import com.example.myspreadshirtapp.utils.Validators
