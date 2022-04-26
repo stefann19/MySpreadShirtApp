@@ -14,6 +14,7 @@ namespace SpreadShirtShop.Data
         }
 
         public DbSet<Appearance> Appearances { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Colors> Colors { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Currency> Currencies { get; set; }
@@ -25,6 +26,7 @@ namespace SpreadShirtShop.Data
         public DbSet<MeasureValue> MeasureValues { get; set; }
         public DbSet<PrintType> PrintTypes { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
+        public DbSet<ProductTypeDepartment> ProductTypeDepartments { get; set; }
         public DbSet<ProductTypePrice> ProductTypePrices { get; set; }
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Sellable> Sellables { get; set; }

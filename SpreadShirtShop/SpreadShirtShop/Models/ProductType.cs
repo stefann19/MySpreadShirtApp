@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace SpreadShirtShop.Models;
 
@@ -26,6 +26,7 @@ public class ProductType
     public List<WashingInstruction> WashingInstructions { get; set; }
     public List<StockState> StockStates { get; set; }
     public bool GiftWrappingSupported { get; set; }
+    [JsonIgnore]
     public List<Sellable> Sellables { get; set; }
 }
 
@@ -36,3 +37,4 @@ public class ProductTypesList
     public int Offset { get; set; }
     public List<ProductType> ProductTypes { get; set; }
 }
+

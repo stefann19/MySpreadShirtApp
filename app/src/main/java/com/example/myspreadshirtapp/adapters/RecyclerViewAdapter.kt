@@ -9,8 +9,8 @@ import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myspreadshirtapp.R
-import com.example.myspreadshirtapp.repository.Sellable
 import com.squareup.picasso.Picasso
+import org.openapitools.client.models.Sellable
 import kotlin.math.roundToInt
 
 class RecyclerViewAdapter(
@@ -27,7 +27,7 @@ class RecyclerViewAdapter(
         val currentImage = images[position]
         val imageView =holder.itemView.findViewById<ImageView>(R.id.ivImage)
         Picasso.get()
-            .load(currentImage.previewImage.url)
+            .load(currentImage.previewImage?.url)
             .into(imageView)
         //holder.itemView.
     }

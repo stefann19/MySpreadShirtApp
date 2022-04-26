@@ -24,12 +24,12 @@ namespace SpreadShirtShop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sellable>>> GetSellables()
         {
-
             return await _context.Sellables
                 .Include(x=> x.PreviewImage)
                 .Include(x=> x.Price)
                 .Include(x=> x.Tags)
                 .Include(x=> x.Appearances)
+                .Include(x=> x.ProductType)
                 .ToListAsync();
         }
         // GET: api/Sellables
@@ -96,7 +96,7 @@ namespace SpreadShirtShop.Controllers
             _context.Countries.AddRange(countries);
             _context.SaveChanges();
 
-            var productTypes = (await retrieveProductType(httpClient,shopId)).ToList();
+            var productTypes = (await RetrieveProductTypes(httpClient,shopId)).ToList();
             var washingInstructions = productTypes.SelectMany(pt => pt.WashingInstructions).DistinctBy(wi=> wi.Id).ToList();
             _context.WashingInstructions.AddRange(washingInstructions);
             _context.SaveChanges();
@@ -153,6 +153,14 @@ namespace SpreadShirtShop.Controllers
             sellables.ForEach(s=> s.Appearances = s.Appearances.Select(ap=> _context.Appearances.Find(ap.Id)).ToList());
             sellables.ForEach(s=> s.ProductType = _context.ProductTypes.Find(s.ProductType.Id));
             _context.Sellables.AddRange(sellables);
+            _context.SaveChanges();
+
+            var productTypeDepartments = (await RetrieveProductTypeDepartments(httpClient,shopId)).ToList();
+            var categories  = productTypeDepartments.SelectMany(ptd => ptd.Categories).ToList();
+            categories.ForEach(c => c.ProductTypes=  c.ProductTypes.Select(pt => pt = _context.ProductTypes.Find(pt.Id)).ToList());
+
+
+            _context.ProductTypeDepartments.AddRange(productTypeDepartments);
             _context.SaveChanges();
 
             return "Ok";
@@ -232,7 +240,7 @@ namespace SpreadShirtShop.Controllers
                     return c;
                 });
         }
-        private Task<IEnumerable<ProductType>> retrieveProductType(HttpClient httpClient,string shopId)
+        private Task<IEnumerable<ProductType>> RetrieveProductTypes(HttpClient httpClient,string shopId)
         {
             return httpClient.GetAsync($"shops/{shopId}/productTypes?mediaType=json&fullData=true&limit=1000")
                 .ContinueWith(res =>
@@ -251,6 +259,20 @@ namespace SpreadShirtShop.Controllers
 
                     return c;
                 });
+        }
+
+        private Task<List<ProductTypeDepartment>> RetrieveProductTypeDepartments(HttpClient httpClient, string shopId)
+        {
+            return httpClient.GetAsync($"shops/{shopId}/productTypeDepartments?mediaType=json&fullData=true")
+                .ContinueWith(res =>
+                {
+                    var response = res.Result;
+                    if (!response.IsSuccessStatusCode) return null;
+
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    var rawProductTypeDepartmentList = JsonConvert.DeserializeObject<ProductTypeDepartmentList>(result);
+                    return rawProductTypeDepartmentList?.ProductTypeDepartments;
+                }); // Blocking call! Program will wait here until a response is received or a timeout occurs.
         }
         // GET: api/Sellables/5
         [HttpGet("{id}")]
