@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/Learning/Android/MySpreadShirtApp/app/src/main/res/layout/activity_login_register.xml" value="0.13958333333333334" />
         <entry key="..\:/Projects/Learning/Android/MySpreadShirtApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Projects/Learning/Android/MySpreadShirtApp/app/src/main/res/layout/board_fragment.xml" value="0.33" />
+        <entry key="..\:/Projects/Learning/Android/MySpreadShirtApp/app/src/main/res/layout/clothing_item_view_pager.xml" value="0.2942708333333333" />
         <entry key="..\:/Projects/Learning/Android/MySpreadShirtApp/app/src/main/res/layout/fragment_nav_host.xml" value="0.2" />
         <entry key="..\:/Projects/Learning/Android/MySpreadShirtApp/app/src/main/res/layout/login_page_fragment.xml" value="0.4" />
         <entry key="..\:/Projects/Learning/Android/MySpreadShirtApp/app/src/main/res/layout/register_page_fragment.xml" value="0.264" />

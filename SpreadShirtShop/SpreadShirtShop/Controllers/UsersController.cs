@@ -23,14 +23,14 @@ namespace SpreadShirtShop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUser()
         {
-            return await _context.User.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            var user = await _context.User.FindAsync(id);
+            var user = await _context.Users.FindAsync(id);
 
             if (user == null)
             {
@@ -41,38 +41,38 @@ namespace SpreadShirtShop.Controllers
         }
         // GET: api/Users/5
         [HttpGet("LoginUser/")]
-        public async Task<ActionResult<String>> LoginUser(string email,string password)
+        public async Task<ActionResult<ApiResponse<int>>> LoginUser(string email,string password)
         {
-            return await _context.User
+            return await _context.Users
                 .FirstOrDefaultAsync(u => u.Email.Equals(email))
                 .ContinueWith(u =>
                 {
                     var user = u.Result;
                     if (user == null)
                     {
-                        return "Incorrect_email_or_password";
+                        return new ApiResponse<int> {Message = "Incorrect email or password" , Status = "BadCreds"};
                     }
 
                     if (BCrypt.Net.BCrypt.Verify(password, user.Password))
                     {
                         switch (user.AccountStatus)
                         {
-                            case "Ok": return "Success";
-                            case "Waiting for verification.": return "Account_not_verified.";
+                            case "Ok": return new ApiResponse<int> { Status = "Success", Value = user.Id};
+                            case "Waiting for verification.": return new ApiResponse<int> { Message = "Account not verified.", Status = "BadCreds" };
                             default:
-                                return "Something_is_wrong";
+                                return new ApiResponse<int> { Message = "Something is wrong", Status = "BadCreds" };
                         }
                     }
                     else
                     {
-                        return "Incorrect_email_or_password";
+                        return new ApiResponse<int> { Message = "Incorrect email or password", Status = "BadCreds" };
                     }
                 });
         }
         [HttpGet("VerifyUser/")]
         public async Task<ActionResult<String>> VerifyUser(string email, string code)
         {
-            return await _context.User.FirstOrDefaultAsync(u => u.Email.Equals(email))
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email))
                 .ContinueWith(u =>
                 {
                     var user = u.Result;
@@ -132,7 +132,7 @@ namespace SpreadShirtShop.Controllers
         [HttpPost]
         public async Task<ActionResult<string>> PostUser(User user)
         {
-            if (_context.User.Any(u => u.Email.Equals(user.Email)))
+            if (_context.Users.Any(u => u.Email.Equals(user.Email)))
             {
                 return "Email_already_registered";
             }
@@ -156,7 +156,7 @@ namespace SpreadShirtShop.Controllers
                     );
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, Salt);
-            _context.User.Add(user);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
 
@@ -168,13 +168,13 @@ namespace SpreadShirtShop.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _context.User.FindAsync(id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            _context.User.Remove(user);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -182,7 +182,7 @@ namespace SpreadShirtShop.Controllers
 
         private bool UserExists(int id)
         {
-            return _context.User.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

@@ -8,12 +8,22 @@
         <import type="android.graphics.Color" />
         <variable
             name="viewModel"
-            type="com.example.myspreadshirtapp.LoginPageViewModel" />
+            type="com.example.myspreadshirtapp.user_area.LoginPageViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="@{viewModel.logginIn ? View.VISIBLE : View.GONE }"
+            />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -47,11 +57,12 @@
                 android:id="@+id/textViewEmailValidationMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:height="16sp"
                 android:text="@{viewModel.email.validationMessage}"
                 android:textSize="12sp"
-                android:height="16sp"
                 android:visibility="@{viewModel.email.isValid ? View.GONE : View.VISIBLE }"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
 
@@ -75,11 +86,12 @@
                 android:id="@+id/textViewPasswordValidationMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:height="16sp"
                 android:text="@{viewModel.password.validationMessage}"
                 android:textSize="12sp"
-                android:height="16sp"
                 android:visibility="@{viewModel.password.isValid ? View.GONE : View.VISIBLE }"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 

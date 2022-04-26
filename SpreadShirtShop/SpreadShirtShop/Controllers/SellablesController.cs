@@ -24,11 +24,12 @@ namespace SpreadShirtShop.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sellable>>> GetSellables()
         {
+
             return await _context.Sellables
                 .Include(x=> x.PreviewImage)
                 .Include(x=> x.Price)
                 .Include(x=> x.Tags)
-                .Include(x=> x.AppearanceIds)
+                .Include(x=> x.Appearances)
                 .ToListAsync();
         }
         // GET: api/Sellables
@@ -46,17 +47,111 @@ namespace SpreadShirtShop.Controllers
             httpClient.DefaultRequestHeaders.UserAgent.Add(ProductInfoHeaderValue.Parse("PostmanRuntime/7.29.0"));
             httpClient.DefaultRequestHeaders.Connection.Add("keep-alive");
 
-            var currencies =  (await RetrieveCurrencies(httpClient)).ToList();
-
-            var rawSellables =  await RetrieveSellables(httpClient, shopId);
-            
+            //_context.Database.ExecuteSqlRaw("Delete from [Sellables]");
+            _context.Colors.RemoveRange(_context.Colors);
+            _context.PrintTypes.RemoveRange(_context.PrintTypes);
+            _context.Appearances.RemoveRange(_context.Appearances);
+            _context.Sellables.RemoveRange(_context.Sellables);
+            _context.Tags.RemoveRange(_context.Tags);
+            _context.CurrencyPrices.RemoveRange(_context.CurrencyPrices);
+            _context.ImageModels.RemoveRange(_context.ImageModels);
             _context.Currencies.RemoveRange(_context.Currencies);
+            _context.Countries.RemoveRange(_context.Countries);
+            _context.Languages.RemoveRange(_context.Languages);
+            _context.Lengths.RemoveRange(_context.Lengths);
+            _context.ProductTypes.RemoveRange(_context.ProductTypes);
+            _context.ProductTypePrices.RemoveRange(_context.ProductTypePrices);
+            _context.WashingInstructions.RemoveRange(_context.WashingInstructions);
+            _context.Resources.RemoveRange(_context.Resources);
+            _context.WashingInstructions.RemoveRange(_context.WashingInstructions);
+            _context.Measures.RemoveRange(_context.Measures);
+            _context.MeasureValues.RemoveRange(_context.MeasureValues);
+            _context.Sizes.RemoveRange(_context.Sizes);
+            _context.StockStates.RemoveRange(_context.StockStates);
+            _context.ShippingStates.RemoveRange(_context.ShippingStates);
+            _context.ShippingCountries.RemoveRange(_context.ShippingCountries);
+            _context.SaveChanges();
+
+            var currencies =  (await RetrieveCurrencies(httpClient)).ToList();
+           
             _context.Currencies.AddRange(currencies);
             _context.SaveChanges();
-            rawSellables.ForEach(s => s.Price.Currency = _context.Currencies.FirstOrDefault(c => c.SpreadShirtOldId == s.Price.CurrencyIdRaw));
+            
 
-            var sellables = rawSellables.Select(s => s.toSellable());
-            _context.Sellables.RemoveRange(_context.Sellables);
+            var languages = (await RetrieveLanguages(httpClient)).ToList();
+            _context.Languages.AddRange(languages);
+            _context.SaveChanges();
+
+            var countries = (await RetrieveCountries(httpClient)).ToList();
+            
+
+            var lengths = countries.Select(c => c.Length).DistinctBy(x => x.Unit).ToList();
+            _context.Lengths.AddRange(lengths);
+            _context.SaveChanges();
+
+            countries.ForEach(country => country.Length = _context.Lengths.Find(country.Length.Unit));
+            countries.ForEach(country => country.Currency = _context.Currencies.Find(country.Currency.Id));
+            countries.ForEach(country => country.DefaultLanguage = _context.Languages.Find(country.DefaultLanguage.Id));
+
+            _context.Countries.AddRange(countries);
+            _context.SaveChanges();
+
+            var productTypes = (await retrieveProductType(httpClient,shopId)).ToList();
+            var washingInstructions = productTypes.SelectMany(pt => pt.WashingInstructions).DistinctBy(wi=> wi.Id).ToList();
+            _context.WashingInstructions.AddRange(washingInstructions);
+            _context.SaveChanges();
+
+            var shippingCountries = productTypes.Select(pt => pt.ManufacturingCountry).DistinctBy(x=> x.Id).ToList();
+            _context.ShippingCountries.AddRange(shippingCountries);
+            _context.SaveChanges();
+
+            productTypes.ForEach(productType=> productType.Price.Currency = _context.Currencies.Find(productType.Price.Currency.Id));
+            productTypes.ForEach(pt=> pt.ManufacturingCountry = _context.ShippingCountries.Find(pt.ManufacturingCountry.Id));
+            productTypes.ForEach(pt=> pt.WashingInstructions = pt.WashingInstructions.Select(washingInstruction => _context.WashingInstructions.Find(washingInstruction.Id)).ToList());
+            var appearances = productTypes.SelectMany(pt => pt.Appearances).DistinctBy(ap=> ap.Id).ToList();
+
+            var printTypes = appearances.SelectMany(a => a.PrintTypes).DistinctBy(printType=> printType.Id);
+            _context.PrintTypes.AddRange(printTypes);
+            _context.SaveChanges();
+            appearances.ForEach(ap=> ap.PrintTypes = ap.PrintTypes.Select(pta=> _context.PrintTypes.Find(pta.Id)).ToList());
+
+            var colors = appearances.SelectMany(a => a.Colors).DistinctBy(c => c.Value);
+            _context.Colors.AddRange(colors);
+            _context.SaveChanges();
+            appearances.ForEach(ap => ap.Colors = ap.Colors.Select(c => _context.Colors.Find(c.Value)).ToList());
+
+            var sizes = productTypes.SelectMany(pt => pt.Sizes).DistinctBy(x=> x.Id);
+            _context.Sizes.AddRange(sizes);
+            _context.SaveChanges();
+            productTypes.ForEach(pt=> pt.Sizes = pt.Sizes.Select(s=> _context.Sizes.Find(s.Id)).ToList());
+
+           
+            _context.Appearances.AddRange(appearances);
+            _context.SaveChanges();
+            productTypes.ForEach(productType => productType.Appearances = productType.Appearances.Select(pta=> _context.Appearances.Find(pta.Id)).ToList());
+            
+            var stockStates = productTypes.SelectMany(pt => pt.StockStates).ToList();
+            stockStates.ForEach(ss =>
+            {
+                ss.Appearance = _context.Appearances.Find(ss.Appearance.Id);
+                ss.Size = _context.Sizes.Find(ss.Size.Id);
+            });
+
+            _context.StockStates.AddRange(stockStates);
+            _context.SaveChanges();
+            
+
+            productTypes.ForEach(productType => productType.StockStates = productType.StockStates.Select(ss=> _context.StockStates.Find(ss.Id)).ToList());
+            
+            _context.ProductTypes.AddRange(productTypes);
+            _context.SaveChanges();
+
+            var rawSellables = await RetrieveSellables(httpClient, shopId);
+            rawSellables.ForEach(s => s.Price.Currency = _context.Currencies.FirstOrDefault(c => c.Id == s.Price.CurrencyIdRaw));
+
+            var sellables = rawSellables.Select(s => s.toSellable()).ToList();
+            sellables.ForEach(s=> s.Appearances = s.Appearances.Select(ap=> _context.Appearances.Find(ap.Id)).ToList());
+            sellables.ForEach(s=> s.ProductType = _context.ProductTypes.Find(s.ProductType.Id));
             _context.Sellables.AddRange(sellables);
             _context.SaveChanges();
 
@@ -91,16 +186,72 @@ namespace SpreadShirtShop.Controllers
                 var c = retrievedCurrencies?.Currencies.Select(currency =>
                 {
                     var r = httpClient.GetAsync($"currencies/{currency.Id}?mediaType=json").Result;
-                    var z = JsonConvert.DeserializeObject<Currency>(r.Content.ReadAsStringAsync().Result);
-                    z.SpreadShirtOldId = z.Id;
-                    z.Id = 0;
-                    return z;
+                    return JsonConvert.DeserializeObject<Currency>(r.Content.ReadAsStringAsync().Result);
                 });
 
                 return c;
             });
         }
+        private Task<IEnumerable<Language>> RetrieveLanguages(HttpClient httpClient)
+        {
+            return httpClient.GetAsync("languages?mediaType=json")
+                .ContinueWith(res =>
+                {
+                    var response = res.Result;
+                    if (!response.IsSuccessStatusCode) return null;
 
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    var retrievedLanguages = JsonConvert.DeserializeObject<LanguageList>(result);
+
+                    var c = retrievedLanguages?.Languages.Select(currency =>
+                    {
+                        var r = httpClient.GetAsync($"languages/{currency.Id}?mediaType=json").Result;
+                        return JsonConvert.DeserializeObject<Language>(r.Content.ReadAsStringAsync().Result);
+                    });
+
+                    return c;
+                });
+        }
+        private Task<IEnumerable<Country>> RetrieveCountries(HttpClient httpClient)
+        {
+            return httpClient.GetAsync("countries?mediaType=json")
+                .ContinueWith(res =>
+                {
+                    var response = res.Result;
+                    if (!response.IsSuccessStatusCode) return null;
+
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    var retrievedCountries = JsonConvert.DeserializeObject<CountriesList>(result);
+
+                    var c = retrievedCountries?.Countries.Select(currency =>
+                    {
+                        var r = httpClient.GetAsync($"countries/{currency.Id}?mediaType=json").Result;
+                        return JsonConvert.DeserializeObject<Country>(r.Content.ReadAsStringAsync().Result);
+                    });
+
+                    return c;
+                });
+        }
+        private Task<IEnumerable<ProductType>> retrieveProductType(HttpClient httpClient,string shopId)
+        {
+            return httpClient.GetAsync($"shops/{shopId}/productTypes?mediaType=json&fullData=true&limit=1000")
+                .ContinueWith(res =>
+                {
+                    var response = res.Result;
+                    if (!response.IsSuccessStatusCode) return null;
+
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    var retrievedProductTypes = JsonConvert.DeserializeObject<ProductTypesList>(result);
+
+                    var c = retrievedProductTypes?.ProductTypes.Select(productType =>
+                    {
+                        var r = httpClient.GetAsync($"shops/{shopId}/productTypes/{productType.Id}?mediaType=json").Result;
+                        return JsonConvert.DeserializeObject<ProductType>(r.Content.ReadAsStringAsync().Result);
+                    });
+
+                    return c;
+                });
+        }
         // GET: api/Sellables/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Sellable>> GetSellable(string id)

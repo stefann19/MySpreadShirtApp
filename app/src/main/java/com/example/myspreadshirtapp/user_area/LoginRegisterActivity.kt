@@ -1,4 +1,4 @@
-package com.example.myspreadshirtapp.UserArea
+package com.example.myspreadshirtapp.user_area
 
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent

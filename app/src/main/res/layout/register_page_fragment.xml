@@ -8,7 +8,7 @@
         <import type="android.graphics.Color" />
         <variable
             name="viewModel"
-            type="com.example.myspreadshirtapp.RegisterPageViewModel" />
+            type="com.example.myspreadshirtapp.user_area.RegisterPageViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,11 +42,12 @@
                 android:id="@+id/textViewEmailValidationMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:height="16sp"
                 android:text="@{viewModel.email.validationMessage}"
                 android:textSize="12sp"
-                android:height="16sp"
                 android:visibility="@{viewModel.email.isValid ? View.GONE : View.VISIBLE }"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextEmail" />
 
@@ -70,11 +71,12 @@
                 android:id="@+id/textViewPasswordValidationMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:height="16sp"
                 android:text="@{viewModel.password.validationMessage}"
                 android:textSize="12sp"
-                android:height="16sp"
                 android:visibility="@{viewModel.password.isValid ? View.GONE : View.VISIBLE }"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
@@ -98,11 +100,12 @@
                 android:id="@+id/textViewConfirmPasswordValidationMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:height="16sp"
                 android:text="@{viewModel.confirmPassword.validationMessage}"
                 android:textSize="12sp"
-                android:height="16sp"
                 android:visibility="@{viewModel.confirmPassword.isValid ? View.GONE : View.VISIBLE }"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextConfirmPassword" />
 

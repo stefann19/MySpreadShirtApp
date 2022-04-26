@@ -1,8 +1,11 @@
-package com.example.myspreadshirtapp.UserArea
+package com.example.myspreadshirtapp.user_area
+
 
 import androidx.lifecycle.ViewModel
 import com.example.myspreadshirtapp.utils.ValidatedEditTextViewModel
 import com.example.myspreadshirtapp.utils.Validators
+import com.example.myspreadshirtapp.utils.addOnPropertyChanged
+
 
 class RegisterPageViewModel(): ViewModel() {
     // TODO: Implement the ViewModel
@@ -13,15 +16,20 @@ class RegisterPageViewModel(): ViewModel() {
         validator = {x-> Validators.passwordValidator(x)}
     )
     val confirmPassword: ValidatedEditTextViewModel = ValidatedEditTextViewModel(
-        validator = {x->
-            var validPass=Validators.passwordValidator(x)
-            if(validPass.isEmpty()){
-                if(password.value.get() == x){
-                    return@ValidatedEditTextViewModel ""
-                }else{
-                    return@ValidatedEditTextViewModel "Passwords not matching!"
-                }
-            }else return@ValidatedEditTextViewModel validPass
-        }
+        validator = {x-> Validators.confirmPasswordValidator(x, password.value.get())}
     )
+    init {
+        password.value.addOnPropertyChanged({
+            confirmPassword.value.notifyChange()
+        })
+
+    }
+
+
 }
+
+
+
+
+
+
