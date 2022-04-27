@@ -32,6 +32,24 @@ namespace SpreadShirtShop.Controllers
                 .Include(x=> x.ProductType)
                 .ToListAsync();
         }
+        [HttpGet("ProductTypes")]
+        public async Task<ActionResult<IEnumerable<ProductType>>> GetProductTypes()
+        {
+            return await _context.ProductTypes.ToListAsync();
+        }
+        [HttpGet("ProductTypes/{id}")]
+        public async Task<ActionResult<ProductType>> GetProductType(int id)
+        {
+            return await _context.ProductTypes.FindAsync(id);
+        }
+        [HttpGet("ProductTypeDepartments")]
+        public async Task<ActionResult<IEnumerable<ProductTypeDepartment>>> GetProductTypeDepartments()
+        {
+            return await _context.ProductTypeDepartments
+                .Include(ptd=> ptd.Categories)
+                .ThenInclude(c=> c.ProductTypes)
+                .ToListAsync();
+        }
         // GET: api/Sellables
         [HttpGet("FetchSellables/")]
         public async Task<ActionResult<String>> FetchSellables()
